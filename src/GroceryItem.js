@@ -14,75 +14,83 @@ export default class GroceryItem extends Component {
     static propTypes = {
         status: PropTypes.string,
         onChangeStatus: PropTypes.func,
-        item: PropTypes.shape( {
+        item: PropTypes.shape({
             title: PropTypes.string,
         }),
     };
-    onChangeStatus = (e, status) => {
+
+    onUpgradeStatus = (e) => {
+        let newStatus;
+        switch (this.props.status) {
+            case 'notNeeded':
+                newStatus = 'needed';
+                break;
+            case 'needed':
+                newStatus = 'thisTrip';
+                break;
+            default:
+                throw new Error("Cannot upgrade status of item");
+        }
         if (this.props.onChangeStatus) {
-            this.props.onChangeStatus(e, this.props.item, this.props.status, status);
+            this.props.onChangeStatus(e, this.props.item, this.props.status, newStatus);
+        }
+    };
+    onDowngradeStatus = (e) => {
+        let newStatus;
+        switch (this.props.status) {
+            case 'thisTrip':
+                newStatus = 'needed';
+                break;
+            case 'needed':
+                newStatus = 'notNeeded';
+                break;
+            default:
+                throw new Error("Cannot downgrade status of item");
+        }
+        if (this.props.onChangeStatus) {
+            this.props.onChangeStatus(e, this.props.item, this.props.status, newStatus);
+        }
+    };
+
+    onSetNotNeeded = (e) => {
+        if (this.props.onChangeStatus) {
+            this.props.onChangeStatus(e, this.props.item, this.props.status, 'notNeeded');
         }
     };
 
     render() {
-        const bundleIcon = this.props.item.bundle ? `(${this.props.item.bundle.title})` : undefined;
+        const inBundleIcon = this.props.item.bundle ? `(${this.props.item.bundle.title})` : undefined;
         const isBundleIcon = this.props.item.items ? <ListIcon/> : undefined;
-        switch (this.props.status) {
-            case 'notNeeded':
-                return (
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AddIcon
-                                onClick={(e) => this.onChangeStatus(e, 'needed')}
-                            />
-                        </ListItemIcon>
-                        {this.props.item.title} {isBundleIcon}{bundleIcon}
-                        {/*    TODO delete from Not Needed */}
-                    </ListItem>
-                );
-            case 'needed':
-                return (
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AddIcon
-                                onClick={(e) => this.onChangeStatus(e, 'thisTrip')}
-                            />
-                        </ListItemIcon>
-                        <ListItemIcon>
-                            <RadioButtonUncheckedIcon
-                                onClick={(e) => this.onChangeStatus(e, 'notNeeded')}
-                            />
-                        </ListItemIcon>
-                        {this.props.item.title} {bundleIcon}
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="comments">
-                                <ClearIcon
-                                    onClick={(e) => this.onChangeStatus(e, 'notNeeded')}
-                                />
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                );
-            case 'thisTrip':
-                return (
-                    <ListItem>
-                        <ListItemIcon>
-                            <RadioButtonUncheckedIcon
-                                onClick={(e) => this.onChangeStatus(e, 'notNeeded')}
-                            />
-                        </ListItemIcon>
-                        {this.props.item.title} {bundleIcon}
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="comments">
-                                <ClearIcon
-                                    onClick={(e) => this.onChangeStatus(e, 'needed')}
-                                />
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                );
-            default:
-                throw new Error("Invalid item status type");
-        }
+
+        const addIcon = (
+            <ListItemIcon>
+                <AddIcon
+                    onClick={this.onUpgradeStatus}
+                />
+            </ListItemIcon>
+        );
+        const checkIcon = (
+            <ListItemIcon>
+                <RadioButtonUncheckedIcon
+                    onClick={this.onSetNotNeeded}
+                />
+            </ListItemIcon>
+        );
+        const removeIcon = (
+            <ListItemSecondaryAction onClick={this.onDowngradeStatus}>
+                <IconButton edge="end" aria-label="comments">
+                    <ClearIcon/>
+                </IconButton>
+            </ListItemSecondaryAction>
+        );
+
+        return (
+            <ListItem>
+                {['notNeeded', 'needed'].includes(this.props.status) && addIcon}
+                {['needed', 'thisTrip'].includes(this.props.status) && checkIcon}
+                {this.props.item.title} {inBundleIcon} {isBundleIcon}
+                {['needed', 'thisTrip'].includes(this.props.status) && removeIcon}
+            </ListItem>
+        );
     }
 }
