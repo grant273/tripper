@@ -3,6 +3,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddIcon from '@material-ui/icons/Add';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 export default class GroceryItem extends Component {
     onChangeStatus = (e, status) => {
@@ -22,6 +25,7 @@ export default class GroceryItem extends Component {
                             />
                         </ListItemIcon>
                         {this.props.item.title}
+                        {/*    TODO delete from Not Needed */}
                     </ListItem>
                 );
             case 'needed':
@@ -38,6 +42,13 @@ export default class GroceryItem extends Component {
                             />
                         </ListItemIcon>
                         {this.props.item.title}
+                        <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="comments">
+                                <ClearIcon
+                                    onClick={(e) => this.onChangeStatus(e, 'notNeeded')}
+                                />
+                            </IconButton>
+                        </ListItemSecondaryAction>
                     </ListItem>
                 );
             case 'thisTrip':
@@ -49,6 +60,13 @@ export default class GroceryItem extends Component {
                             />
                         </ListItemIcon>
                         {this.props.item.title}
+                        <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="comments">
+                                <ClearIcon
+                                    onClick={(e) => this.onChangeStatus(e, 'needed')}
+                                />
+                            </IconButton>
+                        </ListItemSecondaryAction>
                     </ListItem>
                 );
             default:

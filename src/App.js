@@ -11,7 +11,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [
+            notNeeded: [
                 {
                     id: 1,
                     title: "Cream Cheese Block 2x",
@@ -22,23 +22,24 @@ class App extends Component {
                     title: "Franks Red Hot",
                     status: "notNeeded",
                 },
+            ],
+            needed: [
                 {
                     id: 3,
                     title: "Ranch",
                     status: "needed",
-                }
+                },
             ],
+            thisTrip: [],
+
         };
     }
 
-    changeStatus = (e, item, status) => {
+    changeStatus = (e, item, newStatus) => {
+        const currentStatus = item.status;
         this.setState({
-            items: this.state.items.map((x) => {
-                if (x === item) {
-                    return {...x, status}
-                }
-                return x;
-            }),
+            [currentStatus]: this.state[currentStatus].filter(x => x !== item),
+            [newStatus]: [...this.state[newStatus], {...item, status: newStatus}],
         });
     };
 
@@ -48,7 +49,7 @@ class App extends Component {
                 <h1>This Trip</h1>
                 <List>
                     {
-                        this.state.items.filter(x => x.status === 'thisTrip').map((item) => {
+                        this.state.thisTrip.map((item) => {
                             return (
                                 <GroceryItem item={item} onChangeStatus={this.changeStatus}/>
                             );
@@ -58,7 +59,7 @@ class App extends Component {
                 <h1>Needed</h1>
                 <List>
                     {
-                        this.state.items.filter(x => x.status === 'needed').map((item) => {
+                        this.state.needed.map((item) => {
                             return (
                                 <GroceryItem item={item} onChangeStatus={this.changeStatus}/>
                             );
@@ -68,7 +69,7 @@ class App extends Component {
                 <h1>Not Needed</h1>
                 <List>
                     {
-                        this.state.items.filter(x => x.status === 'notNeeded').map((item) => {
+                        this.state.notNeeded.map((item) => {
                             return (
                                 <GroceryItem key={item} item={item} onChangeStatus={this.changeStatus}/>
                             );
