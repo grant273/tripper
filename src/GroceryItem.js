@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ListItem from "@material-ui/core/ListItem";
+import PropTypes from 'prop-types';
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddIcon from '@material-ui/icons/Add';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
@@ -8,14 +9,23 @@ import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 export default class GroceryItem extends Component {
+    static propTypes = {
+        status: PropTypes.string,
+        onChangeStatus: PropTypes.func,
+        item: PropTypes.shape( {
+            title: PropTypes.string,
+        }),
+    };
     onChangeStatus = (e, status) => {
         if (this.props.onChangeStatus) {
-            this.props.onChangeStatus(e, this.props.item, status);
+            this.props.onChangeStatus(e, this.props.item, this.props.status, status);
         }
     };
 
     render() {
-        switch (this.props.item.status) {
+        const bundleIcon = this.props.item.bundle ? `(${this.props.item.bundle})` : undefined;
+
+        switch (this.props.status) {
             case 'notNeeded':
                 return (
                     <ListItem dense button>
@@ -24,7 +34,7 @@ export default class GroceryItem extends Component {
                                 onClick={(e) => this.onChangeStatus(e, 'needed')}
                             />
                         </ListItemIcon>
-                        {this.props.item.title}
+                        {this.props.item.title} {bundleIcon}
                         {/*    TODO delete from Not Needed */}
                     </ListItem>
                 );
@@ -41,7 +51,7 @@ export default class GroceryItem extends Component {
                                 onClick={(e) => this.onChangeStatus(e, 'notNeeded')}
                             />
                         </ListItemIcon>
-                        {this.props.item.title}
+                        {this.props.item.title} {bundleIcon}
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="comments">
                                 <ClearIcon
@@ -59,7 +69,7 @@ export default class GroceryItem extends Component {
                                 onClick={(e) => this.onChangeStatus(e, 'notNeeded')}
                             />
                         </ListItemIcon>
-                        {this.props.item.title}
+                        {this.props.item.title} {bundleIcon}
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="comments">
                                 <ClearIcon

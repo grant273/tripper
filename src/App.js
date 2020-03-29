@@ -13,34 +13,72 @@ class App extends Component {
         this.state = {
             notNeeded: [
                 {
-                    id: 1,
-                    title: "Cream Cheese Block 2x",
-                    status: "notNeeded",
+                    id: 11,
+                    title: "Buffalo Dip",
+                    items: [
+                        {
+                            id: 1,
+                            title: "Cream Cheese Block 2x",
+                        },
+                        {
+                            id: 2,
+                            title: "Franks Red Hot",
+                        },
+                        {
+                            id: 3,
+                            title: "Ranch",
+                        },
+                    ],
                 },
                 {
-                    id: 2,
-                    title: "Franks Red Hot",
-                    status: "notNeeded",
+                    id: 5,
+                    title: "Bagels",
                 },
             ],
             needed: [
                 {
-                    id: 3,
-                    title: "Ranch",
-                    status: "needed",
+                    id: 4,
+                    title: "Ground Beef",
                 },
+
             ],
+            activeBundles: [],
             thisTrip: [],
 
         };
     }
 
-    changeStatus = (e, item, newStatus) => {
-        const currentStatus = item.status;
-        this.setState({
-            [currentStatus]: this.state[currentStatus].filter(x => x !== item),
-            [newStatus]: [...this.state[newStatus], {...item, status: newStatus}],
-        });
+    changeStatus = (e, item, currentStatus, newStatus) => {
+        if ('items' in item) { //if bundle, remove the bundle and spread out items
+            this.setState({
+                [currentStatus]: this.state[currentStatus].filter(x => x !== item),
+                [newStatus]: [...this.state[newStatus], ...item.items.map(x => {
+                    return {...x, bundle: item.title};
+                })],
+                activeBundles: [...this.state.activeBundles, item],
+            });
+        } else {
+            let newState = {
+                ...this.state,
+                [currentStatus]: this.state[currentStatus].filter(x => x !== item),
+                [newStatus]: [...this.state[newStatus], item],
+            };
+            if (newStatus === 'notNeeded') { //if last bundle item is obtained, collapse items into bundle card
+                if ('bundle' in item) {
+                    const bundleTitle = item.bundle;
+                    const bundle = this.state.activeBundles.find(x => x.title === bundleTitle);
+                    if (newState.notNeeded.filter(x => x.bundle === bundleTitle).length === bundle.items.length) {
+                        newState = {
+                            ...newState,
+                            activeBundles: newState.activeBundles.filter(x => x !== bundle),
+                            notNeeded: [...newState.notNeeded.filter(x => x.bundle !== bundleTitle), bundle],
+
+                        }
+                    }
+                }
+            }
+            this.setState(newState);
+        }
     };
 
     render() {
@@ -51,7 +89,8 @@ class App extends Component {
                     {
                         this.state.thisTrip.map((item) => {
                             return (
-                                <GroceryItem item={item} onChangeStatus={this.changeStatus}/>
+                                <GroceryItem key={item.id} item={item} status="thisTrip"
+                                             onChangeStatus={this.changeStatus}/>
                             );
                         })
                     }
@@ -61,7 +100,8 @@ class App extends Component {
                     {
                         this.state.needed.map((item) => {
                             return (
-                                <GroceryItem item={item} onChangeStatus={this.changeStatus}/>
+                                <GroceryItem key={item.id} item={item} status="needed"
+                                             onChangeStatus={this.changeStatus}/>
                             );
                         })
                     }
@@ -71,7 +111,8 @@ class App extends Component {
                     {
                         this.state.notNeeded.map((item) => {
                             return (
-                                <GroceryItem key={item} item={item} onChangeStatus={this.changeStatus}/>
+                                <GroceryItem key={item.id} item={item} status="notNeeded"
+                                             onChangeStatus={this.changeStatus}/>
                             );
                         })
                     }
