@@ -6,6 +6,8 @@ import AddIcon from '@material-ui/icons/Add';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from "@material-ui/core/IconButton";
+import ListIcon from '@material-ui/icons/List';
+
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 export default class GroceryItem extends Component {
@@ -23,24 +25,24 @@ export default class GroceryItem extends Component {
     };
 
     render() {
-        const bundleIcon = this.props.item.bundle ? `(${this.props.item.bundle})` : undefined;
-
+        const bundleIcon = this.props.item.bundle ? `(${this.props.item.bundle.title})` : undefined;
+        const isBundleIcon = this.props.item.items ? <ListIcon/> : undefined;
         switch (this.props.status) {
             case 'notNeeded':
                 return (
-                    <ListItem dense button>
+                    <ListItem button>
                         <ListItemIcon>
                             <AddIcon
                                 onClick={(e) => this.onChangeStatus(e, 'needed')}
                             />
                         </ListItemIcon>
-                        {this.props.item.title} {bundleIcon}
+                        {this.props.item.title} {isBundleIcon}{bundleIcon}
                         {/*    TODO delete from Not Needed */}
                     </ListItem>
                 );
             case 'needed':
                 return (
-                    <ListItem dense button>
+                    <ListItem button>
                         <ListItemIcon>
                             <AddIcon
                                 onClick={(e) => this.onChangeStatus(e, 'thisTrip')}

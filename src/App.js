@@ -53,7 +53,7 @@ class App extends Component {
             this.setState({
                 [currentStatus]: this.state[currentStatus].filter(x => x !== item),
                 [newStatus]: [...this.state[newStatus], ...item.items.map(x => {
-                    return {...x, bundle: item.title};
+                    return {...x, bundle: item};
                 })],
                 activeBundles: [...this.state.activeBundles, item],
             });
@@ -63,17 +63,14 @@ class App extends Component {
                 [currentStatus]: this.state[currentStatus].filter(x => x !== item),
                 [newStatus]: [...this.state[newStatus], item],
             };
-            if (newStatus === 'notNeeded') { //if last bundle item is obtained, collapse items into bundle card
-                if ('bundle' in item) {
-                    const bundleTitle = item.bundle;
-                    const bundle = this.state.activeBundles.find(x => x.title === bundleTitle);
-                    if (newState.notNeeded.filter(x => x.bundle === bundleTitle).length === bundle.items.length) {
-                        newState = {
-                            ...newState,
-                            activeBundles: newState.activeBundles.filter(x => x !== bundle),
-                            notNeeded: [...newState.notNeeded.filter(x => x.bundle !== bundleTitle), bundle],
-
-                        }
+            if (newStatus === 'notNeeded' && 'bundle' in item) {
+                // if last bundle item is obtained, collapse items into single bundle card
+                const bundle = item.bundle;
+                if (newState.notNeeded.filter(x => x.bundle === bundle).length === bundle.items.length) {
+                    newState = {
+                        ...newState,
+                        activeBundles: newState.activeBundles.filter(x => x !== bundle),
+                        notNeeded: [...newState.notNeeded.filter(x => x.bundle !== bundle), bundle],
                     }
                 }
             }
