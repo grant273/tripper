@@ -1,54 +1,65 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import GroceryItem from "./GroceryItem";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Button from "@material-ui/core/Button";
+import AddIcon from '@material-ui/icons/Add';
+import Modal from "@material-ui/core/Modal";
+import CreateItemDialog from "./CreateItemDialog";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            notNeeded: [
-                {
-                    id: 11,
-                    title: "Buffalo Dip",
-                    items: [
-                        {
-                            id: 1,
-                            title: "Cream Cheese Block 2x",
-                        },
-                        {
-                            id: 2,
-                            title: "Franks Red Hot",
-                        },
-                        {
-                            id: 3,
-                            title: "Ranch",
-                        },
-                    ],
-                },
-                {
-                    id: 5,
-                    title: "Bagels",
-                },
-            ],
-            needed: [
-                {
-                    id: 4,
-                    title: "Ground Beef",
-                },
-
-            ],
-            activeBundles: [],
-            thisTrip: [],
-
-        };
+        this.state = JSON.parse(localStorage.getItem("appState"));
+        // this.state = null; // debug for resetting storage
+        if (this.state == null) {
+            this.state = {
+                showAddModal: false,
+                notNeeded: [
+                    {
+                        id: 11,
+                        title: "Buffalo Dip",
+                        items: [
+                            {
+                                id: 1,
+                                title: "Cream Cheese Block 2x",
+                            },
+                            {
+                                id: 2,
+                                title: "Franks Red Hot",
+                            },
+                            {
+                                id: 3,
+                                title: "Ranch",
+                            },
+                        ],
+                    },
+                    {
+                        id: 5,
+                        title: "Bagels",
+                    },
+                ],
+                needed: [
+                    {
+                        id: 4,
+                        title: "Ground Beef",
+                    },
+                ],
+                activeBundles: [],
+                thisTrip: [],
+            };
+        }
     }
 
     changeStatus = (e, item, currentStatus, newStatus) => {
+        if (newStatus === 'deleted') {
+            if (window.confirm(`Are you sure you want to permanently delete ${item.title}`)) {
+                this.setState({
+                    notNeeded: this.state.notNeeded.filter(x => x !== item),
+                });
+            }
+            return;
+        }
         if ('items' in item) { //if bundle, remove the bundle and spread out items
             this.setState({
                 [currentStatus]: this.state[currentStatus].filter(x => x !== item),
@@ -78,9 +89,33 @@ class App extends Component {
         }
     };
 
+    onAdd = (e, newItem) => {
+        this.setState({
+            notNeeded: [...this.state.notNeeded, newItem],
+        });
+    };
+
+    showInputModal = (e) => {
+        this.setState({showAddModal: true})
+    };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        localStorage.setItem('appState', JSON.stringify(this.state));
+    }
+
     render() {
         return (
             <div>
+                <CreateItemDialog
+                    open={this.state.showAddModal}
+                    onClose={() => {
+                        this.setState({showAddModal: false})
+                    }}
+                    onAdd={this.onAdd}
+                >
+
+                </CreateItemDialog>
+
                 <h1>This Trip</h1>
                 <List>
                     {
@@ -103,7 +138,10 @@ class App extends Component {
                         })
                     }
                 </List>
-                <h1>Not Needed</h1>
+                <h1 className='category-header'>
+                    Not Needed
+                    <AddIcon onClick={this.showInputModal}/>
+                </h1>
                 <List>
                     {
                         this.state.notNeeded.map((item) => {

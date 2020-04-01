@@ -44,6 +44,9 @@ export default class GroceryItem extends Component {
             case 'needed':
                 newStatus = 'notNeeded';
                 break;
+            case 'notNeeded':
+                newStatus = 'deleted';
+                break;
             default:
                 throw new Error("Cannot downgrade status of item");
         }
@@ -64,7 +67,7 @@ export default class GroceryItem extends Component {
 
         const addIcon = (
             <ListItemIcon>
-                <AddIcon
+                <AddIcon fontSize="large"
                     onClick={this.onUpgradeStatus}
                 />
             </ListItemIcon>
@@ -84,12 +87,20 @@ export default class GroceryItem extends Component {
             </ListItemSecondaryAction>
         );
 
+        const onNotNeededClick = (e) => {
+            if (this.props.status === 'notNeeded')
+                this.onUpgradeStatus(e);
+        };
+
+        // Anything can be downgraded, but only items not part of a bundle can be totally deleted
+        const showRemoveIcon = ['needed', 'thisTrip'].includes(this.props.status) || !this.props.item.bundle;
+
         return (
-            <ListItem>
+            <ListItem onClick={onNotNeededClick}>
                 {['notNeeded', 'needed'].includes(this.props.status) && addIcon}
                 {['needed', 'thisTrip'].includes(this.props.status) && checkIcon}
                 {this.props.item.title} {inBundleIcon} {isBundleIcon}
-                {['needed', 'thisTrip'].includes(this.props.status) && removeIcon}
+                {showRemoveIcon && removeIcon}
             </ListItem>
         );
     }
