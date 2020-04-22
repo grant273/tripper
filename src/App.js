@@ -5,13 +5,14 @@ import List from "@material-ui/core/List";
 import AddIcon from '@material-ui/icons/Add';
 import Modal from "@material-ui/core/Modal";
 import CreateItemDialog from "./CreateItemDialog";
+import {rank} from "./utils";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = JSON.parse(localStorage.getItem("appState"));
-        // this.state = null; // debug for resetting storage
+        this.state = null; // debug for resetting storage
         if (this.state == null) {
             this.state = {
                 showAddModal: false,
@@ -60,28 +61,35 @@ class App extends Component {
             }
             return;
         }
-        if ('items' in item) { //if bundle, remove the bundle and spread out items
+        if ('items' in item) { //if bundle being added, remove the bundle and spread out items
             this.setState({
                 [currentStatus]: this.state[currentStatus].filter(x => x !== item),
                 [newStatus]: [...this.state[newStatus], ...item.items.map(x => {
-                    return {...x, bundle: item};
+                    return {...x, bundle: item.title};
                 })],
-                activeBundles: [...this.state.activeBundles, item],
+                activeBundles: [...this.state.activeBundles, {title: item.title, length:item.items.length}],
             });
         } else {
             let newState = {
                 ...this.state,
                 [currentStatus]: this.state[currentStatus].filter(x => x !== item),
-                [newStatus]: [...this.state[newStatus], item],
             };
+            if (rank(newStatus) < rank(currentStatus)) {
+                newState[newStatus] = [item, ...this.state[newStatus]];
+            } else {
+                newState[newStatus] = [...this.state[newStatus], item];
+            }
+
             if (newStatus === 'notNeeded' && 'bundle' in item) {
                 // if last bundle item is obtained, collapse items into single bundle card
-                const bundle = item.bundle;
-                if (newState.notNeeded.filter(x => x.bundle === bundle).length === bundle.items.length) {
+                const bundle = this.state.activeBundles.find(x => x.title === item.bundle);
+                if (newState.notNeeded.filter(x => x.bundle === bundle.title).length === bundle.length) {
+                    const bundleItems = newState.notNeeded.filter(x => x.bundle === bundle.title);
+                    const bundleItem = {title: bundle.title, items: bundleItems};
                     newState = {
                         ...newState,
                         activeBundles: newState.activeBundles.filter(x => x !== bundle),
-                        notNeeded: [...newState.notNeeded.filter(x => x.bundle !== bundle), bundle],
+                        notNeeded: [bundleItem, ...newState.notNeeded.filter(x => x.bundle !== bundle.title)],
                     }
                 }
             }

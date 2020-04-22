@@ -62,7 +62,7 @@ export default class GroceryItem extends Component {
     };
 
     render() {
-        const inBundleIcon = this.props.item.bundle ? `(${this.props.item.bundle.title})` : undefined;
+        const inBundleIcon = this.props.item.bundle ? `(${this.props.item.bundle})` : undefined;
         const isBundleIcon = this.props.item.items ? <ListIcon/> : undefined;
 
         const addIcon = (
