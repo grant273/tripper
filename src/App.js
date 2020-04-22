@@ -12,7 +12,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = JSON.parse(localStorage.getItem("appState"));
-        this.state = null; // debug for resetting storage
+        // this.state = null; // debug for resetting storage
         if (this.state == null) {
             this.state = {
                 showAddModal: false,
