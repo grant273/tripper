@@ -93,6 +93,10 @@ class App extends Component {
                     }
                 }
             }
+            if (newStatus === 'notNeeded') {
+                newState[newStatus].sort((x, y) => x.title > y.title ? 1 : -1);
+            }
+
             this.setState(newState);
         }
     };
