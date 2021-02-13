@@ -52,6 +52,18 @@ class App extends Component {
         }
     }
 
+    changeItemTitle = (e, item, status, newTitle) => {
+        const updatedItemList = this.state[status].map((x) => {
+            if (x.id === item.id) {
+                x.title = newTitle;
+                return x;
+            } else {
+                return x;
+            }
+        });
+        this.setState({[status]: updatedItemList});
+    };
+
     changeStatus = (e, item, currentStatus, newStatus) => {
         if (newStatus === 'deleted') {
             if (window.confirm(`Are you sure you want to permanently delete ${item.title}`)) {
@@ -134,7 +146,9 @@ class App extends Component {
                         this.state.thisTrip.map((item) => {
                             return (
                                 <GroceryItem key={item.id} item={item} status="thisTrip"
-                                             onChangeStatus={this.changeStatus}/>
+                                             onChangeStatus={this.changeStatus}
+                                             onChangeItemTitle={this.changeItemTitle}
+                                />
                             );
                         })
                     }
@@ -145,7 +159,9 @@ class App extends Component {
                         this.state.needed.map((item) => {
                             return (
                                 <GroceryItem key={item.id} item={item} status="needed"
-                                             onChangeStatus={this.changeStatus}/>
+                                             onChangeStatus={this.changeStatus}
+                                             onChangeItemTitle={this.changeItemTitle}
+                                />
                             );
                         })
                     }
@@ -159,7 +175,9 @@ class App extends Component {
                         this.state.notNeeded.map((item) => {
                             return (
                                 <GroceryItem key={item.id} item={item} status="notNeeded"
-                                             onChangeStatus={this.changeStatus}/>
+                                             onChangeStatus={this.changeStatus}
+                                             onChangeItemTitle={this.changeItemTitle}
+                                />
                             );
                         })
                     }
