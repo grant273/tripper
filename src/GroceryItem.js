@@ -62,7 +62,7 @@ export default class GroceryItem extends Component {
     };
 
     render() {
-        const inBundleIcon = this.props.item.bundle ? `(${this.props.item.bundle})` : undefined;
+        const bundleName = this.props.item.bundle ? `${this.props.item.bundle}` : undefined;
         const isBundleIcon = this.props.item.items ? <ListIcon/> : undefined;
 
         const addIcon = (
@@ -96,10 +96,19 @@ export default class GroceryItem extends Component {
         const showRemoveIcon = ['needed', 'thisTrip'].includes(this.props.status) || !this.props.item.bundle;
 
         return (
-            <ListItem onClick={onNotNeededClick}>
+            <ListItem disableGutters onClick={onNotNeededClick}>
                 {['notNeeded', 'needed'].includes(this.props.status) && addIcon}
                 {['needed', 'thisTrip'].includes(this.props.status) && checkIcon}
-                {this.props.item.title} {inBundleIcon} {isBundleIcon}
+                <div className="tripper-list-item-content">
+                    <div className="tripper-list-item-title">
+                        {this.props.item.title} {isBundleIcon}
+                    </div>
+                    {bundleName &&
+                        <div className="tripper-list-item-subtitle">- In&nbsp;
+                            <span className="tripper-list-item-subtitle-bundle-name">{bundleName}</span>
+                        </div>
+                    }
+                </div>
                 {showRemoveIcon && removeIcon}
             </ListItem>
         );
