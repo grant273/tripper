@@ -18,31 +18,25 @@ class App extends Component {
                 showAddModal: false,
                 notNeeded: [
                     {
-                        id: 11,
                         title: "Buffalo Dip",
                         items: [
                             {
-                                id: 1,
                                 title: "Cream Cheese Block 2x",
                             },
                             {
-                                id: 2,
                                 title: "Franks Red Hot",
                             },
                             {
-                                id: 3,
                                 title: "Ranch",
                             },
                         ],
                     },
                     {
-                        id: 5,
                         title: "Bagels",
                     },
                 ],
                 needed: [
                     {
-                        id: 4,
                         title: "Ground Beef",
                     },
                 ],
@@ -54,7 +48,7 @@ class App extends Component {
 
     changeItemTitle = (e, item, status, newTitle) => {
         const updatedItemList = this.state[status].map((x) => {
-            if (x.id === item.id) {
+            if (x === item) {
                 x.title = newTitle;
                 return x;
             } else {
@@ -141,11 +135,11 @@ class App extends Component {
                 </CreateItemDialog>
 
                 <h1>This Trip</h1>
-                <List>
+                <List className="ul-this-trip">
                     {
                         this.state.thisTrip.map((item) => {
                             return (
-                                <GroceryItem key={item.id} item={item} status="thisTrip"
+                                <GroceryItem key={item.title} item={item} status="thisTrip"
                                              onChangeStatus={this.changeStatus}
                                              onChangeItemTitle={this.changeItemTitle}
                                 />
@@ -154,11 +148,11 @@ class App extends Component {
                     }
                 </List>
                 <h1>Needed</h1>
-                <List>
+                <List className="ul-needed">
                     {
                         this.state.needed.map((item) => {
                             return (
-                                <GroceryItem key={item.id} item={item} status="needed"
+                                <GroceryItem key={item.title} item={item} status="needed"
                                              onChangeStatus={this.changeStatus}
                                              onChangeItemTitle={this.changeItemTitle}
                                 />
@@ -170,11 +164,11 @@ class App extends Component {
                     Not Needed
                     <AddIcon onClick={this.showInputModal}/>
                 </h1>
-                <List>
+                <List className="ul-not-needed">
                     {
                         this.state.notNeeded.map((item) => {
                             return (
-                                <GroceryItem key={item.id} item={item} status="notNeeded"
+                                <GroceryItem key={item.title} item={item} status="notNeeded"
                                              onChangeStatus={this.changeStatus}
                                              onChangeItemTitle={this.changeItemTitle}
                                 />
