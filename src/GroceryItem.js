@@ -76,7 +76,6 @@ export default class GroceryItem extends Component {
     };
 
     onTitleEdited = (e) => {
-        console.log("SUBMIT");
         this.setState({editing: false});
         this.props.onChangeItemTitle && this.props.onChangeItemTitle(e, this.props.item, this.props.status, e.target.value);
     };
