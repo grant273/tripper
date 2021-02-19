@@ -95,9 +95,12 @@ export default class GroceryItem extends Component {
         const showRemoveIcon = ['needed', 'thisTrip'].includes(this.props.status) || !this.props.item.bundle;
 
         const checkIcon = (
-            <ListItemIcon>
+            <ListItemIcon
+                role="checkbox"
+                aria-checked="false"
+                onClick={this.onSetNotNeeded}
+            >
                 <RadioButtonUncheckedIcon
-                    onClick={this.onSetNotNeeded}
                 />
             </ListItemIcon>
         );
