@@ -139,7 +139,7 @@ class App extends Component {
                     {
                         this.state.thisTrip.map((item) => {
                             return (
-                                <GroceryItem key={item.title} item={item} status="thisTrip"
+                                <GroceryItem key={item.title + item.bundle} item={item} status="thisTrip"
                                              onChangeStatus={this.changeStatus}
                                              onChangeItemTitle={this.changeItemTitle}
                                 />
@@ -152,7 +152,7 @@ class App extends Component {
                     {
                         this.state.needed.map((item) => {
                             return (
-                                <GroceryItem key={item.title} item={item} status="needed"
+                                <GroceryItem key={item.title + item.bundle} item={item} status="needed"
                                              onChangeStatus={this.changeStatus}
                                              onChangeItemTitle={this.changeItemTitle}
                                 />
@@ -162,13 +162,13 @@ class App extends Component {
                 </List>
                 <h1 className='category-header'>
                     Not Needed
-                    <AddIcon onClick={this.showInputModal}/>
+                    <AddIcon onClick={this.showInputModal} className="add-btn" role="button"/>
                 </h1>
                 <List className="ul-not-needed">
                     {
                         this.state.notNeeded.map((item) => {
                             return (
-                                <GroceryItem key={item.title} item={item} status="notNeeded"
+                                <GroceryItem key={item.title + item.bundle} item={item} status="notNeeded"
                                              onChangeStatus={this.changeStatus}
                                              onChangeItemTitle={this.changeItemTitle}
                                 />

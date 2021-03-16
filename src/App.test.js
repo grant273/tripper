@@ -42,7 +42,4 @@ it('collapses a bundle if all subItems are demoted to unneeded', () => {
 
   expect(within(neededList).queryAllByText('Buffalo Dip')).toHaveLength(0);
   expect(within(unneededList).getByText('Buffalo Dip')).toBeDefined();
-
-
-
 });
