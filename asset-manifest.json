@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/tripper/static/css/main.1e102ef1.chunk.css",
-    "main.js": "/tripper/static/js/main.407746ee.chunk.js",
-    "main.js.map": "/tripper/static/js/main.407746ee.chunk.js.map",
+    "main.js": "/tripper/static/js/main.47d6543d.chunk.js",
+    "main.js.map": "/tripper/static/js/main.47d6543d.chunk.js.map",
     "runtime-main.js": "/tripper/static/js/runtime-main.e31adeac.js",
     "runtime-main.js.map": "/tripper/static/js/runtime-main.e31adeac.js.map",
     "static/js/2.993c18ee.chunk.js": "/tripper/static/js/2.993c18ee.chunk.js",
     "static/js/2.993c18ee.chunk.js.map": "/tripper/static/js/2.993c18ee.chunk.js.map",
     "index.html": "/tripper/index.html",
-    "precache-manifest.88a05309bd21585d317d48df7f92c7fc.js": "/tripper/precache-manifest.88a05309bd21585d317d48df7f92c7fc.js",
+    "precache-manifest.46513a6c7607fe3b5c565c36fc37a650.js": "/tripper/precache-manifest.46513a6c7607fe3b5c565c36fc37a650.js",
     "service-worker.js": "/tripper/service-worker.js",
     "static/css/main.1e102ef1.chunk.css.map": "/tripper/static/css/main.1e102ef1.chunk.css.map",
     "static/js/2.993c18ee.chunk.js.LICENSE.txt": "/tripper/static/js/2.993c18ee.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.e31adeac.js",
     "static/js/2.993c18ee.chunk.js",
     "static/css/main.1e102ef1.chunk.css",
-    "static/js/main.407746ee.chunk.js"
+    "static/js/main.47d6543d.chunk.js"
   ]
 }
