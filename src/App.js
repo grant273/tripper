@@ -50,6 +50,11 @@ class App extends Component {
                 thisTrip: [],
             };
         }
+        ['thisTrip', 'needed', 'notNeeded', 'activeBundles'].forEach((x) => {
+            if (!this.state[x]) {
+                this.state[x] = [];
+            }
+        });
     }
 
     changeItemTitle = (e, item, status, newTitle) => {
@@ -138,7 +143,7 @@ class App extends Component {
     setShoppingData = (data) => {
         const appState = {};
         ['thisTrip', 'needed', 'notNeeded', 'activeBundles'].forEach((x) => {
-            appState[x] = data[x];
+            appState[x] = data[x] || [];
         });
         this.setState(appState);
     };
