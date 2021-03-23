@@ -135,17 +135,12 @@ class App extends Component {
         return appState;
     };
 
-    copyDataToClipboard = () => {
-        const copyToClipboard = str => {
-            const el = document.createElement('textarea');
-            el.value = str;
-            document.body.prepend(el);
-            el.select();
-            document.execCommand('copy');
-            // document.body.removeChild(el);
-        };
-        console.log("FART");
-        copyToClipboard(JSON.stringify(this.getShoppingData()));
+    setShoppingData = (data) => {
+        const appState = {};
+        ['thisTrip', 'needed', 'notNeeded'].forEach((x) => {
+            appState[x] = data[x];
+        });
+        this.setState(appState);
     };
 
     render() {
@@ -158,9 +153,21 @@ class App extends Component {
                     }}
                     onAdd={this.onAdd}
                 >
-
                 </CreateItemDialog>
 
+                {this.state.editDataMode &&
+                    <div>
+                        <textarea
+                            style={{width: '100%', height: '600px'}}
+                            defaultValue={JSON.stringify(this.getShoppingData(), null, 2)}
+                            onBlur={e => {
+                                this.setShoppingData(JSON.parse(e.target.value));
+                                this.setState({editDataMode: false});
+                            }}
+                        >
+                        </textarea>
+                    </div>
+                }
                 <div style={{display: 'flex', alignItem: 'center'}}>
                     <h1 style={{flexGrow: 1}}>This Trip</h1>
                     <div>
@@ -180,11 +187,10 @@ class App extends Component {
                             onClose={() => this.setState({menuElem: null})}
                         >
                             <MenuItem onClick={(e) => {
-                                this.setState({menuElem: null});
-                                this.copyDataToClipboard();
+                                this.setState({editDataMode: !this.state.editDataMode});
                             }}
                             >
-                                Export
+                                Edit Data
                             </MenuItem>
                         </Menu>
                     </div>
