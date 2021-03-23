@@ -6,6 +6,11 @@ import AddIcon from '@material-ui/icons/Add';
 import Modal from "@material-ui/core/Modal";
 import CreateItemDialog from "./CreateItemDialog";
 import {rank} from "./utils";
+import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 class App extends Component {
 
@@ -16,6 +21,7 @@ class App extends Component {
         if (this.state == null) {
             this.state = {
                 showAddModal: false,
+                menuElem: null,
                 notNeeded: [
                     {
                         title: "Buffalo Dip",
@@ -118,8 +124,29 @@ class App extends Component {
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        localStorage.setItem('appState', JSON.stringify(this.state));
-    }
+        localStorage.setItem('appState', JSON.stringify(this.getShoppingData()));
+    };
+
+    getShoppingData = () => {
+        const appState = {};
+        ['thisTrip', 'needed', 'notNeeded'].forEach((x) => {
+            appState[x] = this.state[x];
+        });
+        return appState;
+    };
+
+    copyDataToClipboard = () => {
+        const copyToClipboard = str => {
+            const el = document.createElement('textarea');
+            el.value = str;
+            document.body.prepend(el);
+            el.select();
+            document.execCommand('copy');
+            // document.body.removeChild(el);
+        };
+        console.log("FART");
+        copyToClipboard(JSON.stringify(this.getShoppingData()));
+    };
 
     render() {
         return (
@@ -134,7 +161,34 @@ class App extends Component {
 
                 </CreateItemDialog>
 
-                <h1>This Trip</h1>
+                <div style={{display: 'flex', alignItem: 'center'}}>
+                    <h1 style={{flexGrow: 1}}>This Trip</h1>
+                    <div>
+                        <IconButton
+                            aria-label="more"
+                            aria-controls="long-menu"
+                            aria-haspopup="true"
+                            onClick={(e) => this.setState({menuElem: e.currentTarget})}
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={this.state.menuElem}
+                            keepMounted
+                            open={Boolean(this.state.menuElem)}
+                            onClose={() => this.setState({menuElem: null})}
+                        >
+                            <MenuItem onClick={(e) => {
+                                this.setState({menuElem: null});
+                                this.copyDataToClipboard();
+                            }}
+                            >
+                                Export
+                            </MenuItem>
+                        </Menu>
+                    </div>
+                </div>
                 <List className="ul-this-trip">
                     {
                         this.state.thisTrip.map((item) => {
