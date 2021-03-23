@@ -4,6 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm run predeploy` and `npm run deploy`
+Run these consecutively to build and deploy to gh-pages at grantklich.com/tripper
+ 
 ### `npm start`
 
 Runs the app in the development mode.<br />
