@@ -129,7 +129,7 @@ class App extends Component {
 
     getShoppingData = () => {
         const appState = {};
-        ['thisTrip', 'needed', 'notNeeded'].forEach((x) => {
+        ['thisTrip', 'needed', 'notNeeded', 'activeBundles'].forEach((x) => {
             appState[x] = this.state[x];
         });
         return appState;
@@ -137,7 +137,7 @@ class App extends Component {
 
     setShoppingData = (data) => {
         const appState = {};
-        ['thisTrip', 'needed', 'notNeeded'].forEach((x) => {
+        ['thisTrip', 'needed', 'notNeeded', 'activeBundles'].forEach((x) => {
             appState[x] = data[x];
         });
         this.setState(appState);
