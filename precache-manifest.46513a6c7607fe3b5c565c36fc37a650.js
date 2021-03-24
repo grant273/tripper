@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "06a7a64ab097e364c50f7df2a1b355ea",
+    "revision": "2726aa78a89414589981105a25bd3fc7",
     "url": "/tripper/index.html"
   },
   {
-    "revision": "45ed840b9378f8a85be4",
+    "revision": "d142f2eeb17aa8af000c",
     "url": "/tripper/static/css/main.1e102ef1.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tripper/static/js/2.993c18ee.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "45ed840b9378f8a85be4",
-    "url": "/tripper/static/js/main.d9c14d59.chunk.js"
+    "revision": "d142f2eeb17aa8af000c",
+    "url": "/tripper/static/js/main.47d6543d.chunk.js"
   },
   {
     "revision": "dda80b38cccc09061be8",
