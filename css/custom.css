@@ -1,0 +1,92 @@
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+h2 {
+  font-family: 'Roboto Slab', serif;
+  text-align: center;
+}
+#container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.game {
+  padding: 1px;
+  padding-top: 5px;
+  border-top: 1px black solid;
+  margin-top: 5px;
+
+}
+.square {
+  width: 10px;
+  height: 10px;
+  font-size: 12px;
+  text-align: center;
+  padding: 0px;
+  border-color: black;
+  border-width: 0.5px;
+  text-transform: uppercase;
+}
+
+.square:focus {
+  outline-width: 0;
+}
+.square:not(:first-child) {
+  border-left: none;
+}
+
+.row:not(:first-child) .square {
+  border-top: none;
+}
+.row {
+  white-space: nowrap;
+  margin: 0;
+  line-height: 0;
+}
+
+.green {
+  background-color: green;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.won-bg {
+  background-color: green;
+}
+
+.lost-bg {
+  background-color: red;
+}
+
+.guess-form {
+  position: sticky;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  bottom: 0;
+  width: 100%;
+  height: fit-content;
+  border-top: 1px solid black;
+}
+
+.guess-box {
+  width: 90%;
+  height: 30px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
