@@ -124,6 +124,7 @@ window.onload = function () {
 
   // set up guess box
   const guessBox = document.getElementById("guess-box");
+  let lettersLeft = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -136,7 +137,12 @@ window.onload = function () {
         }
       });
       document.getElementById('guess-box').value = "";
+      for(const letter of guess.toUpperCase()) {
+        lettersLeft = lettersLeft.replace(letter, "");
+      }
+      document.getElementById("letters-left").innerText = "Unused: " + Array.from(lettersLeft).join("");
     }
   }
+  document.getElementById("letters-left").innerText = "Unused: " + Array.from(lettersLeft).join("");
   document.getElementById("guess-form").addEventListener("submit", handleSubmit);
 }
