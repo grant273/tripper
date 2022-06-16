@@ -28,6 +28,7 @@ h2 {
 .square {
   width: 10px;
   height: 10px;
+  border-radius: 0;
   font-size: 12px;
   text-align: center;
   padding: 0px;
