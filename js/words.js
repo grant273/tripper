@@ -1833,6 +1833,7 @@ const WORDLIST = [
   "snuck",
   "snuff",
   "soapy",
+  "soare",
   "sober",
   "soggy",
   "solar",
