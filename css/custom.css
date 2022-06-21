@@ -1,3 +1,9 @@
+
+:root {
+  touch-action: pan-x pan-y;
+  height: 100%
+}
+
 body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -84,7 +90,7 @@ h2 {
 
 .guess-box {
   width: 90%;
-  height: 30px;
+  height: 25px;
   text-transform: uppercase;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -93,8 +99,49 @@ h2 {
   text-align: center;
 }
 
+
+.guess-box:disabled {
+  -webkit-text-fill-color: rgba(0, 0, 0, 1);
+  -webkit-opacity: 1;
+  opacity: 1;
+  background: white;
+  border: solid rgb(118, 118, 118) 1px;
+}
+
 .letters-left {
   width: 97%;
   word-break: break-word;
   text-align: center;
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+}
+
+.keyboard-key {
+  width: 50px;
+  height: 45px;
+  border: 1px black solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.keyboard-key:not(:first-child) {
+  border-left: none;
+}
+
+.keyboard-row:not(:first-child) .keyboard-key {
+  margin-top: -1px; /* offset double border */
+}
+
+#enter-key, #back-key {
+  width: 65px;
 }

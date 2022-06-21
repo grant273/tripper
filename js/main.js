@@ -106,6 +106,14 @@ function test() {
 
   game2.render();
 }
+
+if ('ontouchstart' in document.documentElement) {
+  document.getElementById("guess-box").setAttribute("disabled", "true");
+  document.getElementById("guess-box").setAttribute("readonly", "true");
+} else {
+  document.querySelector(".keyboard").remove();
+}
+
 window.onload = function () {
   test();
   document.getElementById("container").innerHTML = "";
@@ -143,6 +151,22 @@ window.onload = function () {
       document.getElementById("letters-left").innerText = "Unused: " + Array.from(lettersLeft).join("");
     }
   }
+
+  function handleKeyInput(e) {
+    if (e.target.id === "back-key") {
+      document.getElementById('guess-box').value = document.getElementById('guess-box').value.slice(0, -1);
+      return
+    }
+    if (e.target.id === "enter-key") {
+      handleSubmit(e);
+      return
+    }
+    if (document.getElementById('guess-box').value.length < 5) {
+      document.getElementById('guess-box').value += e.target.innerText;
+    }
+  }
+
   document.getElementById("letters-left").innerText = "Unused: " + Array.from(lettersLeft).join("");
   document.getElementById("guess-form").addEventListener("submit", handleSubmit);
+  document.querySelectorAll(".keyboard-key").forEach((elem) => elem.addEventListener("click", handleKeyInput));
 }

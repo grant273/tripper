@@ -5,8 +5,7 @@
   <meta charset="utf-8">
   <title>Quinquagintiordle</title>
   <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta property="og:title" content="">
   <meta property="og:type" content="">
   <meta property="og:url" content="">
@@ -33,7 +32,43 @@
   <div id="container"></div>
   <form id="guess-form" class="guess-form">
     <div id="letters-left" class="letters-left"></div>
-    <input maxlength="5" name="guess" id="guess-box" class="guess-box" autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+    <input autofocus maxlength="5" name="guess" id="guess-box" class="guess-box" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+    <div class="keyboard">
+      <div class="keyboard-row">
+        <span class="keyboard-key">Q</span>
+        <span class="keyboard-key">W</span>
+        <span class="keyboard-key">E</span>
+        <span class="keyboard-key">R</span>
+        <span class="keyboard-key">T</span>
+        <span class="keyboard-key">Y</span>
+        <span class="keyboard-key">U</span>
+        <span class="keyboard-key">I</span>
+        <span class="keyboard-key">O</span>
+        <span class="keyboard-key">P</span>
+      </div>
+      <div class="keyboard-row">
+        <span class="keyboard-key">A</span>
+        <span class="keyboard-key">S</span>
+        <span class="keyboard-key">D</span>
+        <span class="keyboard-key">F</span>
+        <span class="keyboard-key">G</span>
+        <span class="keyboard-key">H</span>
+        <span class="keyboard-key">J</span>
+        <span class="keyboard-key">K</span>
+        <span class="keyboard-key">L</span>
+      </div>
+      <div class="keyboard-row">
+        <span class="keyboard-key" id="enter-key">✓️</span>
+        <span class="keyboard-key">Z</span>
+        <span class="keyboard-key">X</span>
+        <span class="keyboard-key">C</span>
+        <span class="keyboard-key">V</span>
+        <span class="keyboard-key">B</span>
+        <span class="keyboard-key">N</span>
+        <span class="keyboard-key">M</span>
+        <span class="keyboard-key" id="back-key">⌫</span>
+      </div>
+    </div>
   </form>
   <script src="js/vendor/modernizr-3.11.2.min.js"></script>
   <script src="js/plugins.js"></script>
