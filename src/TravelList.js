@@ -1,21 +1,16 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import GroceryItem from "./GroceryItem";
 import List from "@material-ui/core/List";
 import AddIcon from '@material-ui/icons/Add';
-import Modal from "@material-ui/core/Modal";
-import CreateItemDialog from "./CreateItemDialog";
-import {rank} from "./utils";
-import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import ClearIcon from "@material-ui/icons/Clear";
 import {H1} from "./H1";
+import TripperListItem from "./TripperListItem";
 
 
 function unpack(state) {
@@ -103,7 +98,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <ListItem key={x.id} disableGutters>{checkIcon}{clearIcon}{x.name}</ListItem>;
+        return <TripperListItem key={x.id} itemData={x} leftIcons={[checkIcon, clearIcon]}></TripperListItem>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Packed</H1>
@@ -116,7 +111,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <ListItem key={x.id} disableGutters>{x.name}{clearIcon}</ListItem>;
+        return <TripperListItem key={x.id} itemData={x} rightIcons={clearIcon}/>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Not Bringing</H1>
@@ -129,7 +124,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <ListItem key={x.id} disableGutters>{addIcon}{x.name}</ListItem>;
+        return <TripperListItem key={x.id} itemData={x} leftIcons={[addIcon]}/>
       })}
 
     </List>
