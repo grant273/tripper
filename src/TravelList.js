@@ -11,32 +11,8 @@ import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import ClearIcon from "@material-ui/icons/Clear";
 import {H1} from "./H1";
 import TripperListItem from "./TripperListItem";
+import {unpack, reset, updateStatus} from "./reducers";
 
-
-function unpack(state) {
-  return state.map(x => {
-    if (x.status === 'packed') {
-      return {...x, status: 'unpacked'};
-    }
-    return x
-  });
-}
-
-function reset(state) {
-  return state.map(x => {
-    return {...x, status: 'unpacked'};
-  });
-}
-
-function updateStatus(state, itemId, status) {
-  return state.map(x => {
-    if (x.id === itemId) {
-      return {...x, status: status};
-    } else {
-      return x;
-    }
-  });
-}
 
 export default function TravelList(props) {
   const [menuElem, setMenuElem] = useState();
@@ -98,7 +74,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem key={x.id} itemData={x} leftIcons={[checkIcon, clearIcon]}></TripperListItem>;
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} leftIcons={[checkIcon, clearIcon]}></TripperListItem>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Packed</H1>
@@ -111,7 +87,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem key={x.id} itemData={x} rightIcons={clearIcon}/>;
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} rightIcons={clearIcon}/>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Not Bringing</H1>
@@ -124,7 +100,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem key={x.id} itemData={x} leftIcons={[addIcon]}/>
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} leftIcons={[addIcon]}/>
       })}
 
     </List>
