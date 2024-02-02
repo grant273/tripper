@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import List from "@material-ui/core/List";
 import AddIcon from '@material-ui/icons/Add';
@@ -15,19 +15,24 @@ import TripperListItem from "./TripperListItem";
 import {unpack, reset, updateStatus, addItem, deleteItem} from "./reducers";
 
 
+const defaultTravelItems = [
+  {
+    id: 1,
+    name: "Tooth Brush",
+    status: "unpacked",
+  }, {
+    id: 2,
+    name: "Tooth Paste",
+    status: "unpacked",
+  }
+]
 export default function TravelList(props) {
   const [menuElem, setMenuElem] = useState();
-  const [travelItems, setTravelItems] = useState([
-    {
-      id: 1,
-      name: "Tooth Brush",
-      status: "unpacked",
-    }, {
-      id: 2,
-      name: "Tooth Paste",
-      status: "unpacked",
-    }
-  ]);
+  const [travelItems, setTravelItems] = useState(window.localStorage.getItem("travelItems") ? JSON.parse(window.localStorage.getItem("travelItems")) : defaultTravelItems);
+
+  useEffect(() => {
+    window.localStorage.setItem("travelItems", JSON.stringify(travelItems));
+  }, [travelItems]);
 
 
   return <div style={{display: 'flex', flexDirection: 'column', alignItem: 'center'}}>
