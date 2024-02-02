@@ -23,12 +23,26 @@ export function updateStatus(state, itemId, status) {
   });
 }
 
-export function updateName(state, itemId, name){
+export function updateName(state, itemId, name) {
   return state.map(x => {
     if (x.id === itemId) {
       return {...x, name: name};
     } else {
       return x;
     }
-  }); 
+  });
+}
+
+export function addItem(state) {
+  return state.concat({
+    id: state.length + 1,
+    name: 'New Item',
+    status: 'unpacked',
+  })
+}
+
+export function deleteItem(state, itemId) {
+  return state.filter(x => {
+    return x.id !== itemId;
+  })
 }

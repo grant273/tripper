@@ -11,7 +11,7 @@ import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import ClearIcon from "@material-ui/icons/Clear";
 import {H1} from "./H1";
 import TripperListItem from "./TripperListItem";
-import {unpack, reset, updateStatus} from "./reducers";
+import {unpack, reset, updateStatus, addItem} from "./reducers";
 
 
 export default function TravelList(props) {
@@ -32,6 +32,12 @@ export default function TravelList(props) {
   return <div style={{display: 'flex', flexDirection: 'column', alignItem: 'center'}}>
     <div style={{display: 'flex'}}>
       <H1 style={{flex: 1}}>Not Packed</H1>
+      <IconButton
+          aria-label="add"
+          onClick={e => setTravelItems(addItem(travelItems))}
+      >
+        <AddIcon/>
+      </IconButton>
       <IconButton
           aria-label="more"
           aria-controls="long-menu"
@@ -87,7 +93,7 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} rightIcons={clearIcon}/>;
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} leftIcons={[clearIcon]}/>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Not Bringing</H1>

@@ -4,9 +4,17 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import {unpack, reset, updateStatus, updateName} from "./reducers";
 import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
 
 
-export default function TripperListItem({itemData, leftIcons, rightIcons, editable = true, setTravelItems, travelItems}) {
+export default function TripperListItem({
+                                          itemData,
+                                          leftIcons,
+                                          rightIcons,
+                                          editable = true,
+                                          setTravelItems,
+                                          travelItems
+                                        }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(itemData.name);
 
@@ -14,28 +22,58 @@ export default function TripperListItem({itemData, leftIcons, rightIcons, editab
     setTravelItems(updateName(travelItems, itemData.id, editValue));
     setIsEditing(false);
   }
-  
+
+  function onCancel() {
+    setIsEditing(false);
+    setEditValue(itemData.name);
+  }
+
   function onChange(e) {
     setEditValue(e.target.value);
   }
-  
+
   function onKeyDown(e) {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       onSubmit();
     }
   }
-  
-  const editIcon = isEditing ?
-      <IconButton edge="end" aria-label="comments" onClick={onSubmit}>
+
+  const submitChangeIcon = (
+      <IconButton edge="end" aria-label="comments" onClick={onSubmit} className={`submit-btn-${itemData.id}`}>
         <CheckIcon/>
-      </IconButton> 
-      :
-      (
-      <IconButton edge="end" aria-label="comments" onClick={() => setIsEditing(true)}>
+      </IconButton>
+  );
+
+  const editIcon = (
+      <IconButton edge="end" aria-label="comments" onClick={() => {
+        setIsEditing(true);
+      }}>
         <EditIcon/>
       </IconButton>
   );
 
-  const text = isEditing ? <input autoFocus onKeyDown={onKeyDown} value={editValue} onChange={onChange}></input> : itemData.name;
-  return <ListItem key={itemData.id} disableGutters>{leftIcons}{text}{rightIcons}{editable && editIcon}</ListItem>;
+  const cancelEditIcon = (
+      <IconButton edge="end" aria-label="comments" onClick={onCancel}>
+        <ClearIcon/>
+      </IconButton>
+  );
+
+  const editInput = (
+      <input style={{width: '90%', fontSize: 19.2}}
+             autoFocus
+             onBlur={(e) => {
+               if (!e.relatedTarget || !e.relatedTarget.classList.contains(`submit-btn-${itemData.id}`)) {
+                 onCancel();
+               }
+             }}
+             onFocus={(e) => e.target.select()}
+             onKeyDown={onKeyDown}
+             value={editValue}
+             onChange={onChange}>
+      </input>
+  );
+  const text = isEditing ? editInput : itemData.name;
+  return <ListItem key={itemData.id} disableGutters>{leftIcons}<span
+      style={{flex: 1}}>{text}</span>{rightIcons}{editable && !isEditing && editIcon}{editable && isEditing && submitChangeIcon}{editable && isEditing && cancelEditIcon}
+  </ListItem>;
 }
