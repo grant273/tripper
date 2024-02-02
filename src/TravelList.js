@@ -5,13 +5,14 @@ import AddIcon from '@material-ui/icons/Add';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import ClearIcon from "@material-ui/icons/Clear";
 import {H1} from "./H1";
 import TripperListItem from "./TripperListItem";
-import {unpack, reset, updateStatus, addItem} from "./reducers";
+import {unpack, reset, updateStatus, addItem, deleteItem} from "./reducers";
 
 
 export default function TravelList(props) {
@@ -80,7 +81,19 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} leftIcons={[checkIcon, clearIcon]}></TripperListItem>;
+        const deleteIcon = (
+            <ListItemIcon>
+              <DeleteIcon fontSize="large"
+                          onClick={e => {
+                            if (window.confirm("Are you sure you want to delete this item permanently?")) {
+                              setTravelItems(deleteItem(travelItems, x.id))
+                            }
+                          }}
+              />
+            </ListItemIcon>
+        );
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x}
+                                leftIcons={[checkIcon, clearIcon, deleteIcon]}></TripperListItem>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Packed</H1>
@@ -93,7 +106,8 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} leftIcons={[clearIcon]}/>;
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x}
+                                leftIcons={[clearIcon]}/>;
       })}
     </List>
     <H1 style={{flexGrow: 1}}>Not Bringing</H1>
@@ -106,7 +120,8 @@ export default function TravelList(props) {
               />
             </ListItemIcon>
         );
-        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x} leftIcons={[addIcon]}/>
+        return <TripperListItem travelItems={travelItems} setTravelItems={setTravelItems} key={x.id} itemData={x}
+                                leftIcons={[addIcon]}/>
       })}
 
     </List>
