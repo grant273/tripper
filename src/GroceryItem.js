@@ -100,8 +100,7 @@ export default class GroceryItem extends Component {
                 aria-checked="false"
                 onClick={this.onSetNotNeeded}
             >
-                <RadioButtonUncheckedIcon
-                />
+                <RadioButtonUncheckedIcon fontSize="large" />
             </ListItemIcon>
         );
         const secondaryActions = (
