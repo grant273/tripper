@@ -2,7 +2,7 @@ import ListItem from "@material-ui/core/ListItem";
 import React, {useState} from "react";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
-import {unpack, reset, updateStatus, updateName} from "./reducers";
+import {updateName} from "./reducers";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 
