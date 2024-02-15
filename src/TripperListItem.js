@@ -45,7 +45,7 @@ export default function TripperListItem({
   );
 
   const editIcon = (
-      <IconButton edge="end" aria-label="comments" onClick={() => {
+      <IconButton aria-label="comments" onClick={() => {
         setIsEditing(true);
       }}>
         <EditIcon/>
@@ -73,7 +73,9 @@ export default function TripperListItem({
       </input>
   );
   const text = isEditing ? editInput : itemData.name;
-  return <ListItem key={itemData.id} disableGutters>{leftIcons}<span
-      style={{flex: 1}}>{text}</span>{rightIcons}{editable && !isEditing && editIcon}{editable && isEditing && submitChangeIcon}{editable && isEditing && cancelEditIcon}
+  return <ListItem key={itemData.id} disableGutters>
+    {leftIcons}
+    <span style={{flexGrow: 1}}>{text}</span>
+    {rightIcons}{editable && !isEditing && editIcon}{editable && isEditing && submitChangeIcon}{editable && isEditing && cancelEditIcon}
   </ListItem>;
 }

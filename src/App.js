@@ -14,7 +14,7 @@ function App() {
   }
   return (
       <div>
-        <div>
+        <div style={{marginBottom: 5}}>
           <a href="#shopping" onClick={setRoute.bind(this, "shopping")}>Shopping</a>
           {' | '}
           <a href="#travel" onClick={setRoute.bind(this, "travel")}>Travel</a>
