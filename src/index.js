@@ -7,7 +7,7 @@ import TravelList from "./TravelList";
 
 ReactDOM.render(
   <React.StrictMode>
-    <TravelList />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
