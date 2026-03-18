@@ -26,16 +26,27 @@ const defaultTravelItems = [
     status: "unpacked",
   }
 ]
+function loadTravelItems() {
+  try {
+    const raw = window.localStorage.getItem("travelItems");
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // corrupted localStorage — fall through to default
+  }
+  return null;
+}
+
 export default function TravelList(props) {
   const [menuElem, setMenuElem] = useState();
-  const [travelItems, setTravelItems] = useState(window.localStorage.getItem("travelItems") ? JSON.parse(window.localStorage.getItem("travelItems")) : defaultTravelItems);
+  const [travelItems, setTravelItems] = useState(() => loadTravelItems() || defaultTravelItems);
+  const [editDataMode, setEditDataMode] = useState(false);
 
   useEffect(() => {
     window.localStorage.setItem("travelItems", JSON.stringify(travelItems));
   }, [travelItems]);
 
 
-  return <div style={{display: 'flex', flexDirection: 'column', alignItem: 'center'}}>
+  return <div style={{display: 'flex', flexDirection: 'column'}}>
     <div style={{display: 'flex'}}>
       <H1 style={{flex: 1}}>Not Packed</H1>
       <IconButton
@@ -67,9 +78,28 @@ export default function TravelList(props) {
         <MenuItem onClick={() => setTravelItems(reset(travelItems))}>
           Reset All
         </MenuItem>
+        <MenuItem onClick={() => setEditDataMode(prev => !prev)}>
+          Edit Data
+        </MenuItem>
       </Menu>
 
     </div>
+    {editDataMode &&
+      <div>
+        <textarea
+            style={{width: '100%', height: '600px'}}
+            defaultValue={JSON.stringify(travelItems, null, 2)}
+            onBlur={e => {
+              try {
+                setTravelItems(JSON.parse(e.target.value));
+              } catch (err) {
+                // invalid JSON — ignore
+              }
+              setEditDataMode(false);
+            }}
+        />
+      </div>
+    }
     <List>
       {travelItems.filter(x => x.status === "unpacked").map(x => {
         const checkIcon = (

@@ -10,12 +10,71 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+let _nextId = 1;
+
+function getNextId() {
+  return _nextId++;
+}
+
+function ensureIds(state) {
+  let maxId = 0;
+  ['thisTrip', 'needed', 'notNeeded'].forEach(key => {
+    (state[key] || []).forEach(item => {
+      if (item.id > maxId) maxId = item.id;
+      if (item.items) {
+        item.items.forEach(sub => {
+          if (sub.id > maxId) maxId = sub.id;
+        });
+      }
+    });
+  });
+  (state.activeBundles || []).forEach(b => {
+    if (b.id > maxId) maxId = b.id;
+  });
+
+  let nextId = maxId + 1;
+  ['thisTrip', 'needed', 'notNeeded'].forEach(key => {
+    (state[key] || []).forEach(item => {
+      if (!item.id) item.id = nextId++;
+      if (item.items) {
+        item.items.forEach(sub => {
+          if (!sub.id) sub.id = nextId++;
+        });
+      }
+    });
+  });
+  (state.activeBundles || []).forEach(b => {
+    if (!b.id) b.id = nextId++;
+  });
+
+  ['thisTrip', 'needed', 'notNeeded'].forEach(key => {
+    (state[key] || []).forEach(item => {
+      if (item.bundle && !item.bundleId) {
+        const ab = (state.activeBundles || []).find(b => b.title === item.bundle);
+        if (ab) item.bundleId = ab.id;
+      }
+    });
+  });
+
+  _nextId = nextId;
+  return state;
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem("appState");
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // corrupted localStorage — fall through to default
+  }
+  return null;
+}
+
 export default class ShoppingList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = JSON.parse(localStorage.getItem("appState"));
-    // this.state = null; // debug for resetting storage
+    this.state = loadState();
     if (this.state == null) {
       this.state = {
         showAddModal: false,
@@ -48,78 +107,94 @@ export default class ShoppingList extends Component {
         thisTrip: [],
       };
     }
-    ['thisTrip', 'needed', 'notNeeded', 'activeBundles'].forEach((x) => {
-      if (!this.state[x]) {
-        this.state[x] = [];
-      }
-    });
+    this.state = {
+      ...this.state,
+      thisTrip: this.state.thisTrip || [],
+      needed: this.state.needed || [],
+      notNeeded: this.state.notNeeded || [],
+      activeBundles: this.state.activeBundles || [],
+    };
+    ensureIds(this.state);
   }
 
   changeItemTitle = (e, item, status, newTitle) => {
-    const updatedItemList = this.state[status].map((x) => {
-      if (x === item) {
-        x.title = newTitle;
-        return x;
-      } else {
-        return x;
-      }
-    });
-    this.setState({[status]: updatedItemList});
+    this.setState(prev => ({
+      [status]: prev[status].map(x =>
+        x.id === item.id ? {...x, title: newTitle} : x
+      ),
+    }));
   };
 
   changeStatus = (e, item, currentStatus, newStatus) => {
     if (newStatus === 'deleted') {
       if (window.confirm(`Are you sure you want to permanently delete ${item.title}`)) {
-        this.setState({
-          notNeeded: this.state.notNeeded.filter(x => x !== item),
-        });
+        this.setState(prev => ({
+          notNeeded: prev.notNeeded.filter(x => x.id !== item.id),
+        }));
       }
       return;
     }
-    if ('items' in item) { //if bundle being added, remove the bundle and spread out items
-      this.setState({
-        [currentStatus]: this.state[currentStatus].filter(x => x !== item),
-        [newStatus]: [...this.state[newStatus], ...item.items.map(x => {
-          return {...x, bundle: item.title};
-        })],
-        activeBundles: [...this.state.activeBundles, {title: item.title, length:item.items.length}],
-      });
+    if ('items' in item) {
+      const bundleId = item.id;
+      this.setState(prev => ({
+        [currentStatus]: prev[currentStatus].filter(x => x.id !== item.id),
+        [newStatus]: [...prev[newStatus], ...item.items.map(x => ({
+          ...x,
+          id: x.id || getNextId(),
+          bundle: item.title,
+          bundleId: bundleId,
+        }))],
+        activeBundles: [...prev.activeBundles, {id: bundleId, title: item.title, length: item.items.length}],
+      }));
     } else {
-      let newState = {
-        ...this.state,
-        [currentStatus]: this.state[currentStatus].filter(x => x !== item),
-      };
-      if (rank(newStatus) < rank(currentStatus)) {
-        newState[newStatus] = [item, ...this.state[newStatus]];
-      } else {
-        newState[newStatus] = [...this.state[newStatus], item];
-      }
+      this.setState(prev => {
+        let newState = {
+          ...prev,
+          [currentStatus]: prev[currentStatus].filter(x => x.id !== item.id),
+        };
+        if (rank(newStatus) < rank(currentStatus)) {
+          newState[newStatus] = [item, ...prev[newStatus]];
+        } else {
+          newState[newStatus] = [...prev[newStatus], item];
+        }
 
-      if (newStatus === 'notNeeded' && 'bundle' in item) {
-        // if last bundle item is obtained, collapse items into single bundle card
-        const bundle = this.state.activeBundles.find(x => x.title === item.bundle);
-        if (newState.notNeeded.filter(x => x.bundle === bundle.title).length === bundle.length) {
-          const bundleItems = newState.notNeeded.filter(x => x.bundle === bundle.title);
-          const bundleItem = {title: bundle.title, items: bundleItems};
-          newState = {
-            ...newState,
-            activeBundles: newState.activeBundles.filter(x => x !== bundle),
-            notNeeded: [bundleItem, ...newState.notNeeded.filter(x => x.bundle !== bundle.title)],
+        if (newStatus === 'notNeeded' && (item.bundleId || item.bundle)) {
+          const bundle = prev.activeBundles.find(x =>
+            item.bundleId ? x.id === item.bundleId : x.title === item.bundle
+          );
+          if (bundle && newState.notNeeded.filter(x =>
+            item.bundleId ? x.bundleId === bundle.id : x.bundle === bundle.title
+          ).length === bundle.length) {
+            const bundleItems = newState.notNeeded.filter(x =>
+              item.bundleId ? x.bundleId === bundle.id : x.bundle === bundle.title
+            );
+            const bundleItem = {id: bundle.id, title: bundle.title, items: bundleItems};
+            newState = {
+              ...newState,
+              activeBundles: newState.activeBundles.filter(x => x.id !== bundle.id),
+              notNeeded: [bundleItem, ...newState.notNeeded.filter(x =>
+                item.bundleId ? x.bundleId !== bundle.id : x.bundle !== bundle.title
+              )],
+            };
           }
         }
-      }
-      if (newStatus === 'notNeeded') {
-        newState[newStatus].sort((x, y) => x.title > y.title ? 1 : -1);
-      }
+        if (newStatus === 'notNeeded') {
+          newState[newStatus].sort((x, y) => x.title > y.title ? 1 : -1);
+        }
 
-      this.setState(newState);
+        return newState;
+      });
     }
   };
 
   onAdd = (e, newItem) => {
-    this.setState({
-      notNeeded: [...this.state.notNeeded, newItem],
-    });
+    newItem.id = getNextId();
+    if (newItem.items) {
+      newItem.items = newItem.items.map(sub => ({...sub, id: getNextId()}));
+    }
+    this.setState(prev => ({
+      notNeeded: [...prev.notNeeded, newItem],
+    }));
   };
 
   showInputModal = (e) => {
@@ -143,6 +218,7 @@ export default class ShoppingList extends Component {
     ['thisTrip', 'needed', 'notNeeded', 'activeBundles'].forEach((x) => {
       appState[x] = data[x] || [];
     });
+    ensureIds(appState);
     this.setState(appState);
   };
 
@@ -171,7 +247,7 @@ export default class ShoppingList extends Component {
                         </textarea>
               </div>
           }
-          <div style={{display: 'flex', alignItem: 'center'}}>
+          <div style={{display: 'flex'}}>
             <h1 style={{flexGrow: 1}}>This Trip</h1>
             <div>
               <IconButton
@@ -202,7 +278,7 @@ export default class ShoppingList extends Component {
             {
               this.state.thisTrip.map((item) => {
                 return (
-                    <GroceryItem key={item.title + item.bundle} item={item} status="thisTrip"
+                    <GroceryItem key={item.id} item={item} status="thisTrip"
                                  onChangeStatus={this.changeStatus}
                                  onChangeItemTitle={this.changeItemTitle}
                     />
@@ -215,7 +291,7 @@ export default class ShoppingList extends Component {
             {
               this.state.needed.map((item) => {
                 return (
-                    <GroceryItem key={item.title + item.bundle} item={item} status="needed"
+                    <GroceryItem key={item.id} item={item} status="needed"
                                  onChangeStatus={this.changeStatus}
                                  onChangeItemTitle={this.changeItemTitle}
                     />
@@ -231,7 +307,7 @@ export default class ShoppingList extends Component {
             {
               this.state.notNeeded.map((item) => {
                 return (
-                    <GroceryItem key={item.title + item.bundle} item={item} status="notNeeded"
+                    <GroceryItem key={item.id} item={item} status="notNeeded"
                                  onChangeStatus={this.changeStatus}
                                  onChangeItemTitle={this.changeItemTitle}
                     />

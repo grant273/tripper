@@ -124,14 +124,6 @@ export default class GroceryItem extends Component {
             </ListItemSecondaryAction>
         );
 
-        const editIcon = (
-            <ListItemSecondaryAction onClick={this.editModeOn}>
-                <IconButton edge="end" aria-label="comments">
-                    <EditIcon/>
-                </IconButton>
-            </ListItemSecondaryAction>
-        );
-
         // use mousedown not click so that this event comes before the onTitleEdited event
         // and we can detect if editing mode is still on
         const onMouseDown = (e) => {

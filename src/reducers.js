@@ -34,8 +34,9 @@ export function updateName(state, itemId, name) {
 }
 
 export function addItem(state) {
+  const maxId = state.reduce((max, x) => Math.max(max, x.id || 0), 0);
   return state.concat({
-    id: state.length + 1,
+    id: maxId + 1,
     name: 'New Item',
     status: 'unpacked',
   })
